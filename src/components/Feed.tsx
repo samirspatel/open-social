@@ -14,7 +14,7 @@ const mockPosts = [
       avatar: 'https://images.unsplash.com/photo-1494790108755-2616b2e45132?w=150&h=150&fit=crop&crop=face',
       handle: '@alice.com'
     },
-    content: 'Just shipped a new feature for our distributed social platform! 🚀 The future of social media is user-owned data.',
+    content: 'Just shipped a new feature for our distributed social platform! The future of social media is user-owned data.',
     images: ['https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=600&fit=crop'],
     timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
     likes: 24,
@@ -30,7 +30,7 @@ const mockPosts = [
       avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
       handle: '@bob.com'
     },
-    content: 'Beautiful sunset from my hike today! 🌅 Sometimes you need to disconnect from code and connect with nature.',
+    content: 'Beautiful sunset from my hike today! Sometimes you need to disconnect from code and connect with nature.',
     images: ['https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop'],
     timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000), // 4 hours ago
     likes: 89,
