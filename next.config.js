@@ -1,12 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
-  trailingSlash: true,
+  // Only enable static export for demo mode, disable for full GitHub auth
+  ...(process.env.DEMO_MODE === 'true' && {
+    output: 'export',
+    trailingSlash: true,
+    basePath: process.env.NODE_ENV === 'production' ? '/open-social' : '',
+    assetPrefix: process.env.NODE_ENV === 'production' ? '/open-social/' : ''
+  }),
   images: {
     unoptimized: true
-  },
-  basePath: process.env.NODE_ENV === 'production' ? '/open-social' : '',
-  assetPrefix: process.env.NODE_ENV === 'production' ? '/open-social/' : ''
+  }
 }
 
 module.exports = nextConfig

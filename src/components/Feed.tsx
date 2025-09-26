@@ -1,119 +1,196 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useSession } from 'next-auth/react'
 import Post from './Post'
 import CreatePost from './CreatePost'
 
-// Mock data for demonstration
-const mockPosts = [
-  {
-    id: '1',
-    author: {
-      username: 'alice',
-      name: 'Alice Johnson',
-      avatar: 'https://images.unsplash.com/photo-1494790108755-2616b2e45132?w=150&h=150&fit=crop&crop=face',
-      handle: '@alice.com'
-    },
-    content: 'Just shipped a new feature for our distributed social platform! The future of social media is user-owned data.',
-    images: ['https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=600&fit=crop'],
-    timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
-    likes: 24,
-    comments: 8,
-    isLiked: false,
-    repository: 'alice/social-data'
-  },
-  {
-    id: '2',
-    author: {
-      username: 'bob',
-      name: 'Bob Wilson',
-      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
-      handle: '@bob.com'
-    },
-    content: 'Beautiful sunset from my hike today! Sometimes you need to disconnect from code and connect with nature.',
-    images: ['https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop'],
-    timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000), // 4 hours ago
-    likes: 89,
-    comments: 12,
-    isLiked: true,
-    repository: 'bob/social-data'
-  },
-  {
-    id: '3',
-    author: {
-      username: 'charlie',
-      name: 'Charlie Davis',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
-      handle: '@charlie.dev'
-    },
-    content: 'Working on some exciting open source projects. Love how GitSocial lets me share updates directly from my repository! #opensource #gitsocial',
-    images: [],
-    timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000), // 6 hours ago
-    likes: 15,
-    comments: 3,
-    isLiked: false,
-    repository: 'charlie/social-data'
-  }
-]
+interface PostType {
+  id: string
+  type: string
+  content: string
+  createdAt: string
+  author: string
+  media: string[]
+  mentions: string[]
+  hashtags: string[]
+  signature: string
+}
 
 export default function Feed() {
-  const [posts, setPosts] = useState(mockPosts)
-  const [isLoading, setIsLoading] = useState(false)
+  const { data: session } = useSession()
+  const [posts, setPosts] = useState<PostType[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  const handleNewPost = (content: string, images: string[]) => {
-    const newPost = {
-      id: Date.now().toString(),
-      author: {
-        username: 'currentuser',
-        name: 'Current User',
-        avatar: 'https://github.com/identicons/currentuser.png',
-        handle: '@currentuser.com'
-      },
-      content,
-      images,
-      timestamp: new Date(),
-      likes: 0,
-      comments: 0,
-      isLiked: false,
-      repository: 'currentuser/social-data'
+  const fetchPosts = async () => {
+    try {
+      setLoading(true)
+      const response = await fetch('/api/posts', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch posts')
+      }
+
+      const data = await response.json()
+      if (data.success) {
+        setPosts(data.posts || [])
+      } else {
+        setError(data.error || 'Failed to load posts')
+      }
+    } catch (err) {
+      console.error('Error fetching posts:', err)
+      setError('Failed to load posts')
+    } finally {
+      setLoading(false)
     }
-
-    setPosts(prev => [newPost, ...prev])
   }
 
-  const handleLike = (postId: string) => {
-    setPosts(prev => prev.map(post => {
-      if (post.id === postId) {
-        return {
-          ...post,
-          isLiked: !post.isLiked,
-          likes: post.isLiked ? post.likes - 1 : post.likes + 1
-        }
+  const handleNewPost = async (content: string, images: string[] = []) => {
+    try {
+      const response = await fetch('/api/posts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          content,
+          images,
+          mentions: extractMentions(content),
+          hashtags: extractHashtags(content)
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to create post')
       }
-      return post
-    }))
+
+      const data = await response.json()
+      if (data.success) {
+        // Add the new post to the beginning of the feed
+        setPosts(prevPosts => [data.post, ...prevPosts])
+      } else {
+        throw new Error(data.error || 'Failed to create post')
+      }
+    } catch (err) {
+      console.error('Error creating post:', err)
+      alert('Failed to create post. Please try again.')
+    }
+  }
+
+  const extractMentions = (content: string): string[] => {
+    const mentionRegex = /@(\w+)/g
+    const mentions = []
+    let match
+    while ((match = mentionRegex.exec(content)) !== null) {
+      mentions.push(match[1])
+    }
+    return mentions
+  }
+
+  const extractHashtags = (content: string): string[] => {
+    const hashtagRegex = /#(\w+)/g
+    const hashtags = []
+    let match
+    while ((match = hashtagRegex.exec(content)) !== null) {
+      hashtags.push(match[1])
+    }
+    return hashtags
+  }
+
+  useEffect(() => {
+    if (session) {
+      fetchPosts()
+    }
+  }, [session])
+
+  if (!session) {
+    return null
   }
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-2xl mx-auto space-y-6">
       {/* Create Post */}
       <CreatePost onPost={handleNewPost} />
 
-      {/* Posts Feed */}
-      <div className="space-y-6">
-        {posts.map(post => (
-          <Post 
-            key={post.id} 
-            post={post} 
-            onLike={() => handleLike(post.id)}
-          />
-        ))}
-      </div>
+      {/* Loading State */}
+      {loading && (
+        <div className="bg-white border border-instagram-border rounded-lg p-8 text-center">
+          <div className="w-8 h-8 border-2 border-instagram-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-instagram-text-light">Loading your feed...</p>
+        </div>
+      )}
 
-      {/* Loading More */}
-      {isLoading && (
-        <div className="flex justify-center py-8">
-          <div className="w-8 h-8 border-2 border-instagram-primary border-t-transparent rounded-full animate-spin"></div>
+      {/* Error State */}
+      {error && (
+        <div className="bg-white border border-instagram-border rounded-lg p-8 text-center">
+          <p className="text-red-600 mb-4">{error}</p>
+          <button 
+            onClick={fetchPosts}
+            className="btn-instagram"
+          >
+            Try Again
+          </button>
+        </div>
+      )}
+
+      {/* Empty State */}
+      {!loading && !error && posts.length === 0 && (
+        <div className="bg-white border border-instagram-border rounded-lg p-8 text-center">
+          <h3 className="text-lg font-semibold text-instagram-text mb-2">Welcome to GitSocial!</h3>
+          <p className="text-instagram-text-light mb-4">
+            Start by creating your first post or following other users to see their content in your feed.
+          </p>
+          <div className="text-sm text-instagram-text-light">
+            <p>Your posts will be stored in your GitHub repository:</p>
+            <code className="bg-gray-100 px-2 py-1 rounded text-xs mt-2 inline-block">
+              {session.user?.name}/social-data
+            </code>
+          </div>
+        </div>
+      )}
+
+      {/* Posts */}
+      {!loading && !error && posts.map((post) => (
+        <Post 
+          key={post.id} 
+          post={{
+            id: post.id,
+            author: {
+              username: post.author,
+              name: post.author,
+              avatar: `https://github.com/${post.author}.png`,
+              handle: `@${post.author}`
+            },
+            content: post.content,
+            images: post.media || [],
+            timestamp: new Date(post.createdAt),
+            likes: 0, // TODO: Implement like counting
+            comments: 0, // TODO: Implement comment counting
+            isLiked: false, // TODO: Implement like status
+            repository: `${post.author}/social-data`
+          }}
+          onLike={() => {
+            // TODO: Implement like functionality
+            console.log('Like post:', post.id)
+          }}
+        />
+      ))}
+
+      {/* Load More */}
+      {!loading && !error && posts.length > 0 && (
+        <div className="text-center py-8">
+          <button 
+            onClick={fetchPosts}
+            className="text-instagram-primary hover:text-instagram-secondary font-semibold"
+          >
+            Refresh Feed
+          </button>
         </div>
       )}
     </div>
