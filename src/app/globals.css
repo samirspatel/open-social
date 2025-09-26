@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-gray-200;
+  }
+  body {
+    @apply bg-instagram-background text-instagram-text;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  }
+}
+
+@layer components {
+  .btn-instagram {
+    @apply bg-instagram-primary hover:bg-instagram-secondary text-white font-semibold py-1 px-4 rounded-md transition-colors duration-200;
+  }
+  
+  .btn-instagram-outline {
+    @apply border border-instagram-border text-instagram-text hover:bg-gray-50 font-semibold py-1 px-4 rounded-md transition-colors duration-200;
+  }
+
+  .input-instagram {
+    @apply border border-instagram-border rounded-sm px-2 py-1.5 text-sm focus:border-gray-400 focus:outline-none bg-instagram-background;
+  }
+
+  .card-instagram {
+    @apply bg-white border border-instagram-border rounded-lg shadow-instagram;
+  }
+}
+
+/* Instagram-like scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
