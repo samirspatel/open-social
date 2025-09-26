@@ -2,13 +2,19 @@
 
 import { useState } from 'react'
 import { Search, Heart, MessageCircle, PlusSquare, User, Home, Compass } from 'lucide-react'
+import { useSession, signOut } from 'next-auth/react'
 
-interface HeaderProps {
-  onLogout: () => void
-}
-
-export default function Header({ onLogout }: HeaderProps) {
+export default function Header() {
   const [searchQuery, setSearchQuery] = useState('')
+  const { data: session } = useSession()
+
+  const handleSignOut = async () => {
+    try {
+      await signOut({ callbackUrl: '/' })
+    } catch (error) {
+      console.error('Sign out error:', error)
+    }
+  }
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-white border-b border-instagram-border z-50">
@@ -58,14 +64,30 @@ export default function Header({ onLogout }: HeaderProps) {
           {/* Profile Menu */}
           <div className="relative group">
             <button className="hover:scale-110 transition-transform">
-              <div className="w-8 h-8 bg-gradient-to-br from-instagram-primary to-instagram-secondary rounded-full flex items-center justify-center">
-                <User className="w-5 h-5 text-white" />
-              </div>
+              {session?.user?.image ? (
+                <img
+                  src={session.user.image}
+                  alt="Profile"
+                  className="w-8 h-8 rounded-full border-2 border-instagram-primary object-cover"
+                />
+              ) : (
+                <div className="w-8 h-8 bg-gradient-to-br from-instagram-primary to-instagram-secondary rounded-full flex items-center justify-center">
+                  <User className="w-5 h-5 text-white" />
+                </div>
+              )}
             </button>
             
             {/* Dropdown Menu */}
             <div className="absolute right-0 mt-2 w-48 bg-white border border-instagram-border rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
               <div className="p-2">
+                {session?.user && (
+                  <>
+                    <div className="px-3 py-2 border-b border-gray-100 mb-2">
+                      <p className="font-semibold text-sm">{session.user.name}</p>
+                      <p className="text-xs text-gray-500">@{session.user.name}</p>
+                    </div>
+                  </>
+                )}
                 <button className="w-full text-left px-3 py-2 hover:bg-gray-50 rounded-md text-sm">
                   Profile
                 </button>
@@ -74,10 +96,10 @@ export default function Header({ onLogout }: HeaderProps) {
                 </button>
                 <hr className="my-1 border-instagram-border" />
                 <button 
-                  onClick={onLogout}
+                  onClick={handleSignOut}
                   className="w-full text-left px-3 py-2 hover:bg-gray-50 rounded-md text-sm text-red-600"
                 >
-                  Log out
+                  Sign Out
                 </button>
               </div>
             </div>

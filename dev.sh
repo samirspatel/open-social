@@ -5,7 +5,7 @@
 
 set -e  # Exit on any error
 
-echo "🚀 GitSocial Development Script"
+echo "GitSocial Development Script"
 echo "================================"
 
 # Colors for output
@@ -19,23 +19,23 @@ NC='\033[0m' # No Color
 
 # Function to print colored output
 print_status() {
-    echo -e "${GREEN}✅ $1${NC}"
+    echo -e "${GREEN}[SUCCESS] $1${NC}"
 }
 
 print_info() {
-    echo -e "${BLUE}ℹ️  $1${NC}"
+    echo -e "${BLUE}[INFO] $1${NC}"
 }
 
 print_warning() {
-    echo -e "${YELLOW}⚠️  $1${NC}"
+    echo -e "${YELLOW}[WARNING] $1${NC}"
 }
 
 print_error() {
-    echo -e "${RED}❌ $1${NC}"
+    echo -e "${RED}[ERROR] $1${NC}"
 }
 
 print_header() {
-    echo -e "\n${PURPLE}🔧 $1${NC}"
+    echo -e "\n${PURPLE}$1${NC}"
     echo "----------------------------------------"
 }
 
@@ -96,6 +96,50 @@ serve_build() {
         serve out -p 3001
     else
         npx serve out -p 3001
+    fi
+}
+
+# Test deployment locally
+test_deploy() {
+    print_header "Testing Deployment Build"
+    
+    print_info "Cleaning previous builds..."
+    clean_build
+    
+    print_info "Building for production..."
+    build_app
+    
+    print_info "Checking build output..."
+    if [ -d "out" ]; then
+        print_status "Build successful! Output directory created."
+        echo "Files in output directory:"
+        ls -la out/
+        echo ""
+        
+        # Check for essential files
+        if [ -f "out/index.html" ]; then
+            print_status "index.html found"
+        else
+            print_error "index.html missing"
+        fi
+        
+        if [ -f "out/404.html" ]; then
+            print_status "404.html found"
+        else
+            print_warning "404.html missing"
+        fi
+        
+        if [ -d "out/_next" ]; then
+            print_status "_next assets found"
+        else
+            print_error "_next assets missing"
+        fi
+        
+        echo ""
+        print_info "Build ready for GitHub Pages deployment!"
+        print_info "You can test it locally with: ./dev.sh serve"
+    else
+        print_error "Build failed - no output directory created"
     fi
 }
 
@@ -176,6 +220,7 @@ show_help() {
     echo -e "${YELLOW}Production:${NC}"
     echo "  ./dev.sh build       - Build for production"
     echo "  ./dev.sh serve       - Serve production build (http://localhost:3001)"
+    echo "  ./dev.sh deploy      - Test deployment build locally"
     echo ""
     echo -e "${YELLOW}Utilities:${NC}"
     echo "  ./dev.sh clean       - Clean build artifacts"
@@ -229,7 +274,7 @@ case "$1" in
         show_help
         ;;
     "")
-        print_info "GitSocial is ready to run! 🚀"
+        print_info "GitSocial is ready to run!"
         show_info
         echo ""
         print_warning "Run './dev.sh help' to see all available commands"

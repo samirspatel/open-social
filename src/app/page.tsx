@@ -1,38 +1,32 @@
 'use client'
 
-import { useState } from 'react'
+import { useSession } from 'next-auth/react'
 import Header from '@/components/Header'
 import Sidebar from '@/components/Sidebar'
 import Feed from '@/components/Feed'
 import AuthModal from '@/components/AuthModal'
 
 export default function Home() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [showAuthModal, setShowAuthModal] = useState(!isAuthenticated)
+  const { data: session, status } = useSession()
 
-  const handleLogin = (userData: any) => {
-    setIsAuthenticated(true)
-    setShowAuthModal(false)
-    console.log('User logged in:', userData)
-  }
-
-  const handleLogout = () => {
-    setIsAuthenticated(false)
-    setShowAuthModal(true)
-  }
-
-  if (!isAuthenticated) {
+  if (status === 'loading') {
     return (
-      <AuthModal 
-        isOpen={showAuthModal} 
-        onLogin={handleLogin}
-      />
+      <div className="min-h-screen bg-instagram-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-2 border-instagram-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-instagram-text-light">Loading GitSocial...</p>
+        </div>
+      </div>
     )
+  }
+
+  if (!session) {
+    return <AuthModal isOpen={true} />
   }
 
   return (
     <div className="min-h-screen bg-instagram-background">
-      <Header onLogout={handleLogout} />
+      <Header />
       
       <div className="flex max-w-6xl mx-auto pt-16">
         {/* Main Feed */}

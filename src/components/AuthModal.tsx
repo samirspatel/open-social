@@ -1,36 +1,27 @@
 'use client'
 
+import { signIn } from 'next-auth/react'
 import { useState } from 'react'
-import { Github, Lock, Users } from 'lucide-react'
+import { Github, Lock, Users, GitBranch } from 'lucide-react'
 
 interface AuthModalProps {
   isOpen: boolean
-  onLogin: (userData: any) => void
 }
 
-export default function AuthModal({ isOpen, onLogin }: AuthModalProps) {
+export default function AuthModal({ isOpen }: AuthModalProps) {
   const [isLoading, setIsLoading] = useState(false)
 
   const handleGitHubLogin = async () => {
     setIsLoading(true)
-    
-    // Simulate GitHub OAuth flow
-    // In real implementation, this would redirect to GitHub OAuth
-    setTimeout(() => {
-      const mockUser = {
-        id: 'user123',
-        login: 'sampleuser',
-        name: 'Sample User',
-        avatar_url: 'https://github.com/identicons/sampleuser.png',
-        bio: 'Building the future of social media',
-        location: 'San Francisco, CA',
-        public_repos: 42,
-        followers: 123,
-        following: 56
-      }
-      onLogin(mockUser)
+    try {
+      await signIn('github', { 
+        callbackUrl: '/',
+        redirect: true 
+      })
+    } catch (error) {
+      console.error('Sign in error:', error)
       setIsLoading(false)
-    }, 2000)
+    }
   }
 
   if (!isOpen) return null
@@ -40,6 +31,9 @@ export default function AuthModal({ isOpen, onLogin }: AuthModalProps) {
       <div className="bg-white rounded-lg shadow-2xl w-full max-w-md">
         {/* Header */}
         <div className="text-center p-8 border-b border-instagram-border">
+          <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-instagram-primary via-instagram-secondary to-instagram-tertiary rounded-full flex items-center justify-center">
+            <GitBranch className="w-8 h-8 text-white" />
+          </div>
           <h1 className="text-3xl font-bold bg-gradient-to-r from-instagram-primary via-instagram-secondary to-instagram-tertiary bg-clip-text text-transparent mb-2">
             GitSocial
           </h1>
@@ -93,8 +87,18 @@ export default function AuthModal({ isOpen, onLogin }: AuthModalProps) {
             )}
           </button>
 
+          <div className="mt-6 p-4 bg-blue-50 rounded-lg text-left">
+            <h3 className="font-semibold text-blue-900 mb-2 text-xs">What happens when you sign in:</h3>
+            <ul className="text-xs text-blue-800 space-y-1">
+              <li>• We&apos;ll create a &apos;social-data&apos; repository in your account</li>
+              <li>• Your posts will be stored as JSON files with full history</li>
+              <li>• You maintain complete ownership of your social data</li>
+              <li>• Export or migrate your data anytime - no lock-in</li>
+            </ul>
+          </div>
+
           <p className="text-center text-instagram-text-light text-xs mt-4">
-            By continuing, you agree to our Terms of Service and Privacy Policy
+            By continuing, you agree to create a public repository for your social data
           </p>
         </div>
       </div>
