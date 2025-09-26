@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "1.0.0",
+  "definitions": {
+    "userProfile": {
+      "type": "object",
+      "required": ["githubId", "username", "name", "handle", "repository", "joinedAt"],
+      "properties": {
+        "githubId": { "type": "string" },
+        "username": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "avatar": { "type": "string" },
+        "handle": { "type": "string" },
+        "repository": { "type": "string" },
+        "joinedAt": { "type": "string", "format": "date-time" },
+        "lastUpdated": { "type": "string", "format": "date-time" },
+        "version": { "type": "string" }
+      }
+    },
+    "userIndex": {
+      "type": "object",
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "username": { "type": "string" },
+              "handle": { "type": "string" },
+              "joinedAt": { "type": "string", "format": "date-time" }
+            }
+          }
+        },
+        "totalUsers": { "type": "number" },
+        "lastUpdated": { "type": "string", "format": "date-time" }
+      }
+    },
+    "networkStats": {
+      "type": "object",
+      "properties": {
+        "totalUsers": { "type": "number" },
+        "totalConnections": { "type": "number" },
+        "activeUsers": { "type": "number" },
+        "newUsersToday": { "type": "number" },
+        "lastUpdated": { "type": "string", "format": "date-time" }
+      }
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "totalUsers": 0,
+  "totalConnections": 0,
+  "activeUsers": 0,
+  "newUsersToday": 0,
+  "topUsers": [],
+  "growthStats": {
+    "usersThisWeek": 0,
+    "usersThisMonth": 0,
+    "connectionsThisWeek": 0,
+    "connectionsThisMonth": 0
+  },
+  "lastUpdated": "2024-01-15T10:30:00.000Z",
+  "version": "1.0.0"
+}

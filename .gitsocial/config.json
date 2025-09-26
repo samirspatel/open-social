@@ -1,0 +1,29 @@
+{
+  "branch": "user-data",
+  "purpose": "GitSocial User Registry and Network Data",
+  "version": "1.0.0",
+  "schema": {
+    "users": "Individual user profile files",
+    "network": "Network-wide connection and statistics data"
+  },
+  "autoUpdates": {
+    "userSignup": true,
+    "socialConnections": true,
+    "networkStats": true
+  },
+  "dataTypes": {
+    "stored": [
+      "User profiles and metadata",
+      "Network discovery information", 
+      "Social connection mappings",
+      "Global user index and statistics"
+    ],
+    "notStored": [
+      "User posts and content",
+      "Photos and media files",
+      "Comments and interactions", 
+      "Private user data"
+    ]
+  },
+  "updatedAt": "2024-01-15T10:30:00.000Z"
+}
