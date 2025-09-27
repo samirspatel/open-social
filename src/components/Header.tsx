@@ -1,24 +1,22 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { Search, Heart, MessageCircle, PlusSquare, User, Home, Compass } from 'lucide-react'
-import { useSession, signOut } from 'next-auth/react'
+import { useState } from 'react'
+import { Search, Heart, MessageCircle, PlusSquare, User, Home, Compass, LogOut } from 'lucide-react'
+import { GitHubAuth } from '@/lib/github/GitHubAuth'
 
-export default function Header() {
+interface HeaderProps {
+  user: any
+  onLogout: () => void
+}
+
+export default function Header({ user, onLogout }: HeaderProps) {
   const [searchQuery, setSearchQuery] = useState('')
-  const [isStaticDemo, setIsStaticDemo] = useState(false)
-  const { data: session } = useSession()
-
-  // Detect if we're running on GitHub Pages (static demo)
-  useEffect(() => {
-    const isGitHubPages = window.location.hostname.includes('github.io')
-    const isProduction = process.env.NODE_ENV === 'production'
-    setIsStaticDemo(isGitHubPages && isProduction)
-  }, [])
 
   const handleSignOut = async () => {
     try {
-      await signOut({ callbackUrl: '/' })
+      const githubAuth = new GitHubAuth()
+      githubAuth.logout()
+      onLogout()
     } catch (error) {
       console.error('Sign out error:', error)
     }
@@ -72,13 +70,9 @@ export default function Header() {
           {/* Profile Menu */}
           <div className="relative group">
             <button className="hover:scale-110 transition-transform">
-              {isStaticDemo ? (
-                <div className="w-8 h-8 bg-gradient-to-br from-instagram-primary to-instagram-secondary rounded-full flex items-center justify-center">
-                  <User className="w-5 h-5 text-white" />
-                </div>
-              ) : session?.user?.image ? (
+              {user?.avatar_url ? (
                 <img
-                  src={session.user.image}
+                  src={user.avatar_url}
                   alt="Profile"
                   className="w-8 h-8 rounded-full border-2 border-instagram-primary object-cover"
                 />
@@ -92,48 +86,36 @@ export default function Header() {
             {/* Dropdown Menu */}
             <div className="absolute right-0 mt-2 w-48 bg-white border border-instagram-border rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
               <div className="p-2">
-                {isStaticDemo ? (
-                  <>
-                    <div className="px-3 py-2 border-b border-gray-100 mb-2">
-                      <p className="font-semibold text-sm">Demo User</p>
-                      <p className="text-xs text-gray-500">@demo.github.io</p>
-                    </div>
-                    <button className="w-full text-left px-3 py-2 hover:bg-gray-50 rounded-md text-sm">
-                      Profile
-                    </button>
-                    <button className="w-full text-left px-3 py-2 hover:bg-gray-50 rounded-md text-sm">
-                      Settings
-                    </button>
-                    <hr className="my-1 border-instagram-border" />
-                    <button className="w-full text-left px-3 py-2 hover:bg-gray-50 rounded-md text-sm text-blue-600">
-                      GitHub Pages Demo
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    {session?.user && (
-                      <>
-                        <div className="px-3 py-2 border-b border-gray-100 mb-2">
-                          <p className="font-semibold text-sm">{session.user.name}</p>
-                          <p className="text-xs text-gray-500">@{session.user.name}</p>
-                        </div>
-                      </>
-                    )}
-                    <button className="w-full text-left px-3 py-2 hover:bg-gray-50 rounded-md text-sm">
-                      Profile
-                    </button>
-                    <button className="w-full text-left px-3 py-2 hover:bg-gray-50 rounded-md text-sm">
-                      Settings
-                    </button>
-                    <hr className="my-1 border-instagram-border" />
-                    <button 
-                      onClick={() => signOut()}
-                      className="w-full text-left px-3 py-2 hover:bg-gray-50 rounded-md text-sm text-red-600"
-                    >
-                      Sign Out
-                    </button>
-                  </>
-                )}
+                <div className="px-3 py-2 border-b border-gray-100 mb-2">
+                  <p className="font-semibold text-sm">{user?.name || user?.login}</p>
+                  <p className="text-xs text-gray-500">@{user?.login}</p>
+                  <p className="text-xs text-green-600 mt-1">Production GitSocial</p>
+                </div>
+                
+                <button 
+                  onClick={() => window.open(`https://github.com/${user?.login}/open-social-data`, '_blank')}
+                  className="w-full text-left px-3 py-2 hover:bg-gray-50 rounded-md text-sm"
+                >
+                  View My Data Repository
+                </button>
+                
+                <button className="w-full text-left px-3 py-2 hover:bg-gray-50 rounded-md text-sm">
+                  Profile
+                </button>
+                
+                <button className="w-full text-left px-3 py-2 hover:bg-gray-50 rounded-md text-sm">
+                  Settings
+                </button>
+                
+                <hr className="my-1 border-instagram-border" />
+                
+                <button 
+                  onClick={handleSignOut}
+                  className="w-full text-left px-3 py-2 hover:bg-gray-50 rounded-md text-sm text-red-600 flex items-center space-x-2"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span>Sign Out</span>
+                </button>
               </div>
             </div>
           </div>

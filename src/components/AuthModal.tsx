@@ -2,26 +2,133 @@
 
 import { useState } from 'react'
 import { Github, Lock, Users } from 'lucide-react'
-import { signIn } from 'next-auth/react'
+import { GitHubAuth } from '@/lib/github/GitHubAuth'
+import { GitHubAPI } from '@/lib/github/GitHubAPI'
 
 interface AuthModalProps {
   isOpen: boolean
+  onLogin: (user: any) => void
 }
 
-export default function AuthModal({ isOpen }: AuthModalProps) {
+export default function AuthModal({ isOpen, onLogin }: AuthModalProps) {
   const [isLoading, setIsLoading] = useState(false)
+  const [step, setStep] = useState('login') // 'login' | 'setup'
 
   const handleGitHubLogin = async () => {
     setIsLoading(true)
+    setStep('setup')
+    
     try {
-      await signIn('github', { callbackUrl: '/', redirect: true })
+      const githubAuth = new GitHubAuth()
+      await githubAuth.login()
     } catch (error) {
       console.error('Sign in error:', error)
+      setIsLoading(false)
+      setStep('login')
+    }
+  }
+
+  const handleTokenSetup = async () => {
+    setIsLoading(true)
+    
+    try {
+      const githubAuth = new GitHubAuth()
+      const user = await githubAuth.getCurrentUser()
+      
+      // Initialize user's social data repository
+      const githubAPI = new GitHubAPI(user.token)
+      
+      // Check if repository already exists
+      const repoExists = await githubAPI.repositoryExists(user.login, 'open-social-data')
+      
+      if (!repoExists) {
+        await githubAPI.initializeSocialDataRepo(user.login, user)
+      }
+      
+      onLogin(user)
+    } catch (error) {
+      console.error('Setup error:', error)
+      alert('Setup failed. Please try again.')
+    } finally {
       setIsLoading(false)
     }
   }
 
   if (!isOpen) return null
+
+  if (step === 'setup') {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="bg-white rounded-lg shadow-2xl w-full max-w-lg">
+          {/* Header */}
+          <div className="text-center p-8 border-b border-instagram-border">
+            <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-instagram-primary via-instagram-secondary to-instagram-tertiary rounded-full flex items-center justify-center">
+              <Lock className="w-8 h-8 text-white" />
+            </div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              Setup GitSocial Access
+            </h1>
+            <p className="text-instagram-text-light text-sm">
+              Create a personal access token for GitSocial
+            </p>
+          </div>
+
+          {/* Setup Instructions */}
+          <div className="p-6">
+            <div className="space-y-4 mb-6">
+              <div className="text-sm">
+                <p className="font-semibold mb-3">To complete setup, create a GitHub Personal Access Token:</p>
+                
+                <ol className="space-y-2 text-instagram-text-light">
+                  <li className="flex items-start">
+                    <span className="bg-instagram-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center mr-3 mt-0.5">1</span>
+                    <span>Go to <a href="https://github.com/settings/tokens/new" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">GitHub Settings → Developer settings → Personal access tokens</a></span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="bg-instagram-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center mr-3 mt-0.5">2</span>
+                    <span>Set description: <code className="bg-gray-100 px-1 rounded">GitSocial Access</code></span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="bg-instagram-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center mr-3 mt-0.5">3</span>
+                    <span>Select scopes: <code className="bg-gray-100 px-1 rounded">repo</code>, <code className="bg-gray-100 px-1 rounded">read:user</code>, <code className="bg-gray-100 px-1 rounded">user:email</code></span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="bg-instagram-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center mr-3 mt-0.5">4</span>
+                    <span>Generate token and paste it below</span>
+                  </li>
+                </ol>
+              </div>
+            </div>
+
+            <button
+              onClick={handleTokenSetup}
+              disabled={isLoading}
+              className="w-full bg-instagram-primary hover:bg-instagram-secondary text-white font-semibold py-3 px-4 rounded-lg flex items-center justify-center space-x-3 transition-colors duration-200 disabled:opacity-50"
+            >
+              {isLoading ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  <span>Setting up your account...</span>
+                </>
+              ) : (
+                <>
+                  <Lock className="w-5 h-5" />
+                  <span>Complete Setup</span>
+                </>
+              )}
+            </button>
+
+            <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <p className="text-xs text-yellow-800">
+                <strong>Security:</strong> Your token is stored locally in your browser and never sent to any server. 
+                GitSocial communicates directly with GitHub&apos;s API.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -68,7 +175,7 @@ export default function AuthModal({ isOpen }: AuthModalProps) {
               <div>
                 <h3 className="font-semibold text-sm">GitHub Integration</h3>
                 <p className="text-instagram-text-light text-xs">
-                  Seamlessly connects with your existing GitHub account
+                  Runs entirely on GitHub Pages - no servers needed
                 </p>
               </div>
             </div>
@@ -94,21 +201,22 @@ export default function AuthModal({ isOpen }: AuthModalProps) {
           </button>
 
           {/* Info */}
-          <div className="mt-6 p-4 bg-blue-50 rounded-lg text-left">
-            <h3 className="font-semibold text-blue-900 mb-2 text-xs">
+          <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg text-left">
+            <h3 className="font-semibold text-green-900 mb-2 text-xs">
               What happens when you sign in:
             </h3>
-            <ul className="text-xs text-blue-800 space-y-1">
-              <li>• We&apos;ll create an &apos;open-social-data&apos; repository in your account</li>
-              <li>• Your posts will be stored as JSON files with full history</li>
-              <li>• You maintain complete ownership of your social data</li>
-              <li>• Export or migrate your data anytime - no lock-in</li>
+            <ul className="text-xs text-green-800 space-y-1">
+              <li>• Creates an &apos;open-social-data&apos; repository in your account</li>
+              <li>• Posts stored as JSON files with full Git history</li>
+              <li>• Complete data ownership - it&apos;s YOUR repository</li>
+              <li>• Export or migrate data anytime - no vendor lock-in</li>
+              <li>• Zero hosting costs - runs on GitHub Pages</li>
             </ul>
           </div>
 
           {/* Terms */}
           <p className="text-center text-instagram-text-light text-xs mt-4">
-            By continuing, you agree to create a public repository for your social data
+            Production social media platform - your data, your control
           </p>
         </div>
       </div>

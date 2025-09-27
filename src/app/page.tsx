@@ -1,45 +1,34 @@
 'use client'
 
-import { useSession } from 'next-auth/react'
 import { useState, useEffect } from 'react'
 import Header from '@/components/Header'
 import Sidebar from '@/components/Sidebar'
 import Feed from '@/components/Feed'
 import AuthModal from '@/components/AuthModal'
+import { GitHubAuth } from '@/lib/github/GitHubAuth'
 
 export default function Home() {
-  const { data: session, status } = useSession()
-  const [isStaticDemo, setIsStaticDemo] = useState(false)
+  const [user, setUser] = useState(null)
+  const [loading, setLoading] = useState(true)
 
-  // Detect if we're running on GitHub Pages (static demo)
   useEffect(() => {
-    const isGitHubPages = window.location.hostname.includes('github.io')
-    const isProduction = process.env.NODE_ENV === 'production'
-    setIsStaticDemo(isGitHubPages && isProduction)
+    // Check if user is already authenticated
+    const checkAuth = async () => {
+      try {
+        const githubAuth = new GitHubAuth()
+        const userData = await githubAuth.getCurrentUser()
+        setUser(userData)
+      } catch (error) {
+        console.log('User not authenticated')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    checkAuth()
   }, [])
 
-  // For static demo, skip authentication
-  if (isStaticDemo) {
-    return (
-      <div className="min-h-screen bg-instagram-background">
-        <Header />
-
-        <div className="flex max-w-6xl mx-auto pt-16">
-          {/* Main Feed */}
-          <div className="flex-1 max-w-2xl mx-auto px-4">
-            <Feed />
-          </div>
-
-          {/* Sidebar */}
-          <div className="hidden lg:block w-80 p-4">
-            <Sidebar />
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  if (status === 'loading') {
+  if (loading) {
     return (
       <div className="min-h-screen bg-instagram-background flex items-center justify-center">
         <div className="text-center">
@@ -50,23 +39,23 @@ export default function Home() {
     )
   }
 
-  if (!session) {
-    return <AuthModal isOpen={true} />
+  if (!user) {
+    return <AuthModal isOpen={true} onLogin={setUser} />
   }
 
   return (
     <div className="min-h-screen bg-instagram-background">
-      <Header />
+      <Header user={user} onLogout={() => setUser(null)} />
 
       <div className="flex max-w-6xl mx-auto pt-16">
         {/* Main Feed */}
         <div className="flex-1 max-w-2xl mx-auto px-4">
-          <Feed />
+          <Feed user={user} />
         </div>
 
         {/* Sidebar */}
         <div className="hidden lg:block w-80 p-4">
-          <Sidebar />
+          <Sidebar user={user} />
         </div>
       </div>
     </div>

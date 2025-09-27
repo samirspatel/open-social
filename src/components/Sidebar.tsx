@@ -1,176 +1,173 @@
 'use client'
 
-import { GitFork, Star, Users, TrendingUp } from 'lucide-react'
+import { TrendingUp, Users, Bookmark, Settings, Github } from 'lucide-react'
 
-export default function Sidebar() {
-  // Mock data for suggestions
-  const suggestedUsers = [
-    {
-      username: 'sarah_dev',
-      name: 'Sarah Chen',
-      avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=face',
-      handle: '@sarah.dev',
-      mutualFollows: 12,
-      isFollowing: false
-    },
-    {
-      username: 'mike_codes',
-      name: 'Mike Rodriguez',
-      avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=face',
-      handle: '@mike.codes',
-      mutualFollows: 8,
-      isFollowing: false
-    },
-    {
-      username: 'tech_jane',
-      name: 'Jane Smith',
-      avatar: 'https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?w=80&h=80&fit=crop&crop=face',
-      handle: '@jane.tech',
-      mutualFollows: 15,
-      isFollowing: true
-    }
-  ]
+interface SidebarProps {
+  user: any
+}
 
+export default function Sidebar({ user }: SidebarProps) {
   const trendingTopics = [
-    { tag: '#opensource', posts: '12.4K' },
-    { tag: '#gitsocial', posts: '8.2K' },
-    { tag: '#webdev', posts: '45.1K' },
-    { tag: '#reactjs', posts: '32.7K' },
-    { tag: '#typescript', posts: '28.3K' }
+    { tag: '#OpenSocial', posts: '12.3K posts' },
+    { tag: '#DistributedSocial', posts: '8.9K posts' },
+    { tag: '#GitHubPages', posts: '6.2K posts' },
+    { tag: '#DataOwnership', posts: '4.7K posts' },
+    { tag: '#NoServers', posts: '3.1K posts' }
   ]
 
-  const topRepositories = [
-    { name: 'vercel/next.js', stars: '118k', language: 'TypeScript' },
-    { name: 'facebook/react', stars: '220k', language: 'JavaScript' },
-    { name: 'microsoft/vscode', stars: '156k', language: 'TypeScript' }
+  const suggestedUsers = [
+    { username: 'octocat', name: 'GitHub', avatar: 'https://avatars.githubusercontent.com/u/583231?v=4' },
+    { username: 'torvalds', name: 'Linus Torvalds', avatar: 'https://avatars.githubusercontent.com/u/1024025?v=4' },
+    { username: 'gaearon', name: 'Dan Abramov', avatar: 'https://avatars.githubusercontent.com/u/810438?v=4' }
   ]
 
   return (
     <div className="space-y-6">
-      {/* User Stats Card */}
-      <div className="card-instagram p-4">
+      {/* User Profile Summary */}
+      <div className="bg-white border border-instagram-border rounded-lg p-4">
         <div className="flex items-center space-x-3 mb-4">
-          <img 
-            src="https://github.com/identicons/currentuser.png" 
-            alt="Your avatar"
-            className="w-12 h-12 rounded-full object-cover"
-          />
+          {user?.avatar_url ? (
+            <img
+              src={user.avatar_url}
+              alt="Profile"
+              className="w-12 h-12 rounded-full object-cover border-2 border-instagram-primary"
+            />
+          ) : (
+            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-instagram-primary to-instagram-secondary flex items-center justify-center">
+              <span className="text-white font-bold text-lg">
+                {user?.name?.charAt(0) || user?.login?.charAt(0) || 'U'}
+              </span>
+            </div>
+          )}
           <div>
-            <h3 className="font-semibold">currentuser</h3>
-            <p className="text-instagram-text-light text-sm">@currentuser.com</p>
+            <h3 className="font-semibold text-lg">{user?.name || user?.login}</h3>
+            <p className="text-instagram-text-light text-sm">@{user?.login}</p>
+            <p className="text-green-600 text-xs flex items-center space-x-1">
+              <Github className="w-3 h-3" />
+              <span>Production Account</span>
+            </p>
           </div>
         </div>
-        
+
         <div className="grid grid-cols-3 gap-4 text-center">
           <div>
-            <div className="font-semibold">42</div>
+            <div className="font-bold text-lg">0</div>
             <div className="text-instagram-text-light text-xs">Posts</div>
           </div>
           <div>
-            <div className="font-semibold">123</div>
+            <div className="font-bold text-lg">0</div>
             <div className="text-instagram-text-light text-xs">Following</div>
           </div>
           <div>
-            <div className="font-semibold">89</div>
+            <div className="font-bold text-lg">0</div>
             <div className="text-instagram-text-light text-xs">Followers</div>
           </div>
         </div>
-      </div>
-
-      {/* Suggested Users */}
-      <div className="card-instagram">
-        <div className="p-4 pb-0">
-          <h3 className="font-semibold flex items-center space-x-2 mb-4">
-            <Users className="w-4 h-4" />
-            <span>Suggested for you</span>
-          </h3>
-        </div>
         
-        <div className="divide-y divide-instagram-border">
-          {suggestedUsers.map((user) => (
-            <div key={user.username} className="p-4 flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <img 
-                  src={user.avatar} 
-                  alt={user.name}
-                  className="w-10 h-10 rounded-full object-cover"
-                />
-                <div>
-                  <div className="font-semibold text-sm">{user.name}</div>
-                  <div className="text-instagram-text-light text-xs">{user.handle}</div>
-                  <div className="text-instagram-text-light text-xs">
-                    {user.mutualFollows} mutual follows
-                  </div>
-                </div>
-              </div>
-              
-              <button 
-                className={`px-4 py-1 rounded-md text-sm font-semibold transition-colors ${
-                  user.isFollowing
-                    ? 'btn-instagram-outline'
-                    : 'btn-instagram'
-                }`}
-              >
-                {user.isFollowing ? 'Following' : 'Follow'}
-              </button>
-            </div>
-          ))}
-        </div>
-        
-        <div className="p-4 pt-0">
-          <button className="text-instagram-primary text-sm font-semibold">
-            See all suggestions
+        {/* Repository Link */}
+        <div className="mt-4 pt-4 border-t border-instagram-border">
+          <button
+            onClick={() => window.open(`https://github.com/${user?.login}/open-social-data`, '_blank')}
+            className="w-full text-center py-2 px-3 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm transition-colors flex items-center justify-center space-x-2"
+          >
+            <Github className="w-4 h-4" />
+            <span>View Data Repository</span>
           </button>
         </div>
       </div>
 
       {/* Trending Topics */}
-      <div className="card-instagram">
-        <div className="p-4 pb-0">
-          <h3 className="font-semibold flex items-center space-x-2 mb-4">
-            <TrendingUp className="w-4 h-4" />
-            <span>Trending</span>
-          </h3>
+      <div className="bg-white border border-instagram-border rounded-lg p-4">
+        <div className="flex items-center space-x-2 mb-4">
+          <TrendingUp className="w-5 h-5 text-instagram-primary" />
+          <h3 className="font-semibold">Trending in GitSocial</h3>
         </div>
-        
-        <div className="divide-y divide-instagram-border">
-          {trendingTopics.map((topic) => (
-            <div key={topic.tag} className="p-4 hover:bg-gray-50 cursor-pointer transition-colors">
-              <div className="font-semibold text-sm text-instagram-primary">{topic.tag}</div>
-              <div className="text-instagram-text-light text-xs">{topic.posts} posts</div>
+        <div className="space-y-3">
+          {trendingTopics.map((topic, index) => (
+            <div key={index} className="hover:bg-gray-50 p-2 rounded-lg cursor-pointer transition-colors">
+              <div className="font-semibold text-sm">{topic.tag}</div>
+              <div className="text-instagram-text-light text-xs">{topic.posts}</div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Top Repositories */}
-      <div className="card-instagram">
-        <div className="p-4 pb-0">
-          <h3 className="font-semibold flex items-center space-x-2 mb-4">
-            <GitFork className="w-4 h-4" />
-            <span>Popular Repositories</span>
-          </h3>
+      {/* Suggested Users */}
+      <div className="bg-white border border-instagram-border rounded-lg p-4">
+        <div className="flex items-center space-x-2 mb-4">
+          <Users className="w-5 h-5 text-instagram-secondary" />
+          <h3 className="font-semibold">Who to follow</h3>
         </div>
-        
-        <div className="divide-y divide-instagram-border">
-          {topRepositories.map((repo) => (
-            <div key={repo.name} className="p-4 hover:bg-gray-50 cursor-pointer transition-colors">
-              <div className="flex items-center justify-between mb-1">
-                <div className="font-semibold text-sm">{repo.name}</div>
-                <div className="flex items-center space-x-1 text-instagram-text-light text-xs">
-                  <Star className="w-3 h-3" />
-                  <span>{repo.stars}</span>
+        <div className="space-y-3">
+          {suggestedUsers.map((suggestedUser, index) => (
+            <div key={index} className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <img
+                  src={suggestedUser.avatar}
+                  alt={suggestedUser.name}
+                  className="w-10 h-10 rounded-full object-cover"
+                />
+                <div>
+                  <div className="font-semibold text-sm">{suggestedUser.name}</div>
+                  <div className="text-instagram-text-light text-xs">@{suggestedUser.username}</div>
                 </div>
               </div>
-              <div className="text-instagram-text-light text-xs">{repo.language}</div>
+              <button className="bg-instagram-primary text-white px-4 py-1 rounded-full text-sm hover:bg-instagram-secondary transition-colors">
+                Follow
+              </button>
             </div>
           ))}
         </div>
-        
-        <div className="p-4 pt-0">
-          <button className="text-instagram-primary text-sm font-semibold">
-            Explore repositories
-          </button>
+        <button className="text-instagram-primary text-sm mt-3 hover:text-instagram-secondary">
+          Show more
+        </button>
+      </div>
+
+      {/* Quick Links */}
+      <div className="bg-white border border-instagram-border rounded-lg p-4">
+        <h3 className="font-semibold mb-3">Quick Links</h3>
+        <div className="space-y-2">
+          <a href="#" className="flex items-center space-x-3 p-2 hover:bg-gray-50 rounded-lg transition-colors">
+            <Bookmark className="w-5 h-5 text-instagram-text-light" />
+            <span className="text-sm">Bookmarks</span>
+          </a>
+          <a href="#" className="flex items-center space-x-3 p-2 hover:bg-gray-50 rounded-lg transition-colors">
+            <Settings className="w-5 h-5 text-instagram-text-light" />
+            <span className="text-sm">Settings</span>
+          </a>
+          <a 
+            href="https://github.com/samirpatel/open-social" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="flex items-center space-x-3 p-2 hover:bg-gray-50 rounded-lg transition-colors"
+          >
+            <Github className="w-5 h-5 text-instagram-text-light" />
+            <span className="text-sm">Source Code</span>
+          </a>
+        </div>
+      </div>
+
+      {/* GitSocial Info */}
+      <div className="bg-gradient-to-br from-green-50 to-blue-50 border border-green-200 rounded-lg p-4">
+        <div className="text-center">
+          <h3 className="font-semibold text-green-900 mb-2">GitSocial Production</h3>
+          <p className="text-sm text-green-800 mb-3">
+            Distributed social media powered by GitHub repositories
+          </p>
+          <div className="text-xs text-green-600 space-y-1">
+            <div className="flex items-center justify-center space-x-2">
+              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              <span>Zero server costs</span>
+            </div>
+            <div className="flex items-center justify-center space-x-2">
+              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              <span>Complete data ownership</span>
+            </div>
+            <div className="flex items-center justify-center space-x-2">
+              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              <span>Open source & transparent</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
