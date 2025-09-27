@@ -36,18 +36,21 @@ export class SocialService {
         throw new Error('Failed to update following list')
       }
 
-      // Add to target user's followers list
-      const followerResult = await this.githubService.addFollower(
-        targetUsername,
-        currentUsername,
-        currentUserResult.user.handle
-      )
+    // Add to target user's followers list
+    const followerResult = await this.githubService.addFollower(
+      targetUsername,
+      currentUsername,
+      currentUserResult.user.handle
+    )
 
-      if (!followerResult.success) {
-        console.warn('Failed to update target user followers list, but follow was successful')
-      }
+    if (!followerResult.success) {
+      console.warn('Failed to update target user followers list, but follow was successful')
+    }
 
-      return { success: true }
+    // Record the connection in the network data
+    await this.userRegistry.recordConnection(currentUsername, targetUsername)
+
+    return { success: true }
     } catch (error) {
       console.error('Error in followUser:', error)
       return {
