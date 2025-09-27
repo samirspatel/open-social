@@ -1,6 +1,6 @@
 # GitSocial - Distributed Social Media Platform
 
-🚀 **[Live Demo: https://samirpatel.github.io/open-social/](https://samirpatel.github.io/open-social/)**
+🚀 **[Live Demo: https://samirpatel.github.io/open-social/](https://samirpatel.github.io/open-social/)** *(Note: May take 5-10 minutes to go live after deployment)*
 
 > What open source did for code, open social does for data.
 
