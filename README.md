@@ -1,5 +1,7 @@
 # GitSocial - Distributed Social Media Platform
 
+🚀 **[Live Demo: https://samirpatel.github.io/open-social/](https://samirpatel.github.io/open-social/)**
+
 > What open source did for code, open social does for data.
 
 GitSocial is a distributed social media application where users' data lives in their own GitHub repositories, implementing true data ownership and portability.
