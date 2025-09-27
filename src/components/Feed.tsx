@@ -213,9 +213,9 @@ export default function Feed() {
           </p>
           <div className="text-sm text-instagram-text-light">
             <p>Your posts will be stored in your GitHub repository:</p>
-            <code className="bg-gray-100 px-2 py-1 rounded text-xs mt-2 inline-block">
-              {session.user?.name}/open-social-data
-            </code>
+              <code className="bg-gray-100 px-2 py-1 rounded text-xs mt-2 inline-block">
+                {session?.user?.name || 'user'}/open-social-data
+              </code>
           </div>
         </div>
       )}
