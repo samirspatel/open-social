@@ -92,7 +92,7 @@ export class GitHubSecurity {
       await this.octokit.rest.repos.replaceAllTopics({
         owner,
         repo,
-        names: ['social-data', 'distributed-social', 'gitsocial', 'open-social']
+        names: ['open-social-data', 'distributed-social', 'gitsocial', 'open-social']
       })
 
       return { success: true }

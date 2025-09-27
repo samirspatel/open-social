@@ -1,6 +1,6 @@
 # GitSocial - Distributed Social Media Platform
 
-🚀 **[Live Demo: https://samirpatel.github.io/open-social/](https://samirpatel.github.io/open-social/)** *(Note: May take 5-10 minutes to go live after deployment)*
+**[Live Demo: https://samirpatel.github.io/open-social/](https://samirpatel.github.io/open-social/)** *(Note: May take 5-10 minutes to go live after deployment)*
 
 > What open source did for code, open social does for data.
 
@@ -36,25 +36,25 @@ This is social media designed for users, not shareholders.
 
 ### Data Ownership Model
 
-Each user has a GitHub repository (`username/social-data`) containing:
+Each user has a GitHub repository (`username/open-social-data`) containing:
 
 ```
-username/social-data/
-├── .gitsocial/
-│   ├── config.json       # App configuration
-│   └── schema-version.json
-├── profile.json          # User profile
-├── posts/                # All posts as JSON files
-│   ├── 2024/
-│   │   ├── 01/
-│   │   └── 02/
-├── social/
-│   ├── following.json    # Who user follows
-│   ├── followers.json    # User's followers (app managed)
-│   └── likes.json       # Liked posts
-└── media/               # User's media files
-    ├── avatars/
-    └── uploads/
+username/open-social-data/
+ .gitsocial/
+�    config.json       # App configuration
+�    schema-version.json
+ profile.json          # User profile
+ posts/                # All posts as JSON files
+�    2024/
+�   �    01/
+�   �    02/
+ social/
+�    following.json    # Who user follows
+�    followers.json    # User's followers (app managed)
+�    likes.json       # Liked posts
+ media/               # User's media files
+     avatars/
+     uploads/
 ```
 
 ## Quick Start
@@ -181,10 +181,10 @@ When you visit the application:
 
 ### Data Flow
 
-1. **User creates content** → Stored in their GitHub repository
-2. **App aggregates content** → From multiple repositories via webhooks
-3. **Feed generation** → Real-time aggregation from user's network
-4. **Cross-app compatibility** → Standard JSON schemas enable data sharing
+1. **User creates content** � Stored in their GitHub repository
+2. **App aggregates content** � From multiple repositories via webhooks
+3. **Feed generation** � Real-time aggregation from user's network
+4. **Cross-app compatibility** � Standard JSON schemas enable data sharing
 
 ## Development
 

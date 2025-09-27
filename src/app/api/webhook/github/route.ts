@@ -94,8 +94,8 @@ async function handlePushEvent(payload: any) {
   const repository = payload.repository
   const pusher = payload.pusher
 
-  // Only process pushes to social-data repositories
-  if (repository.name === 'social-data') {
+  // Only process pushes to open-social-data repositories
+  if (repository.name === 'open-social-data') {
     console.log(`Social data updated for user: ${repository.owner.login}`)
     
     // Here you could trigger cache invalidation, notifications, etc.
@@ -113,12 +113,12 @@ async function handleRepositoryEvent(payload: any) {
   const action = payload.action
   const repository = payload.repository
 
-  if (action === 'created' && repository.name === 'social-data') {
-    console.log(`New social-data repository created: ${repository.full_name}`)
+  if (action === 'created' && repository.name === 'open-social-data') {
+    console.log(`New open-social-data repository created: ${repository.full_name}`)
     // Could trigger welcome workflows, setup verification, etc.
   }
   
-  if (action === 'deleted' && repository.name === 'social-data') {
+  if (action === 'deleted' && repository.name === 'open-social-data') {
     console.log(`Social-data repository deleted: ${repository.full_name}`)
     // Could trigger cleanup in user registry
   }

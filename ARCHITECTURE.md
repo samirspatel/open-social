@@ -6,26 +6,26 @@ Build a distributed social media application where users' data lives in their ow
 ## Core Concepts
 
 ### Data Ownership
-- Each user has a dedicated GitHub repository (e.g., `username/social-data`)
+- Each user has a dedicated GitHub repository (e.g., `username/open-social-data`)
 - All social media entities (posts, likes, follows, profile) stored as JSON files
 - Users maintain full ownership and portability of their data
 - No vendor lock-in - data exists independently of any particular app
 
 ### Repository Structure
 ```
-username/social-data/
-├── profile.json              # User profile information
-├── posts/                    # All user posts
-│   ├── 2024-01-15-hello.json
-│   └── 2024-01-16-update.json
-├── social/                   # Social connections
-│   ├── following.json        # Users this person follows  
-│   ├── followers.json        # Followers (updated by app)
-│   └── likes.json           # Posts this user has liked
-├── media/                    # Images, videos, attachments
-│   └── uploads/
-└── .gitsocial/              # App metadata
-    └── config.json
+username/open-social-data/
+ profile.json              # User profile information
+ posts/                    # All user posts
+�    2024-01-15-hello.json
+�    2024-01-16-update.json
+ social/                   # Social connections
+�    following.json        # Users this person follows  
+�    followers.json        # Followers (updated by app)
+�    likes.json           # Posts this user has liked
+ media/                    # Images, videos, attachments
+�    uploads/
+ .gitsocial/              # App metadata
+     config.json
 ```
 
 ### Data Schemas
@@ -68,7 +68,7 @@ username/social-data/
   "following": [
     {
       "handle": "@otheruser",
-      "repository": "otheruser/social-data",
+      "repository": "otheruser/open-social-data",
       "followedAt": "2024-01-10T00:00:00Z"
     }
   ],
@@ -145,7 +145,7 @@ username/social-data/
 
 ### Onboarding
 1. User authenticates with GitHub OAuth
-2. App creates `username/social-data` repository (if not exists)
+2. App creates `username/open-social-data` repository (if not exists)
 3. Initialize repository with basic structure and schemas
 4. User completes profile setup
 5. App commits initial profile.json

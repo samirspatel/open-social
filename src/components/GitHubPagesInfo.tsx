@@ -46,7 +46,7 @@ export default function GitHubPagesInfo() {
                 rel="noopener noreferrer" 
                 className="hover:underline font-medium"
               >
-                View source code â†’
+                View source code †
               </a>
             </p>
           </div>

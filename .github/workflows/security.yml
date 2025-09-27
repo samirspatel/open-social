@@ -2,12 +2,12 @@ name: Security Checks
 
 on:
   push:
-    branches: [ main, feat1 ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
   schedule:
     # Run security checks weekly on Sundays at 2 AM UTC
-    - cron: '0 2 * * 0'
+    - cron: "0 2 * * 0"
 
 permissions:
   contents: read
@@ -24,8 +24,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -49,7 +49,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'javascript', 'typescript' ]
+        language: ["javascript", "typescript"]
 
     steps:
       - name: Checkout repository
@@ -93,8 +93,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -106,14 +106,14 @@ jobs:
       - name: Check for security headers
         run: |
           echo "Checking for security-related configurations..."
-          
+
           # Check for security headers in Next.js config
           if grep -r "X-Content-Type-Options\|X-Frame-Options\|X-XSS-Protection\|Strict-Transport-Security" next.config.js; then
             echo "✅ Security headers found in Next.js config"
           else
             echo "⚠️ Security headers not found - consider adding them"
           fi
-          
+
           # Check for CSP configuration
           if grep -r "Content-Security-Policy" .; then
             echo "✅ Content Security Policy configuration found"
@@ -131,7 +131,7 @@ jobs:
       - name: Check OAuth scopes
         run: |
           echo "Checking OAuth scope configuration..."
-          
+
           # Check that minimal scopes are being requested
           if grep -r "read:user.*user:email.*public_repo" src/; then
             echo "✅ Minimal OAuth scopes configured"
@@ -139,7 +139,7 @@ jobs:
             echo "⚠️ OAuth scopes may be too broad - review permissions"
             exit 1
           fi
-          
+
           # Check for GitHub OAuth provider configuration
           if grep -r "GitHubProvider" src/; then
             echo "✅ GitHub OAuth provider configured"
@@ -158,14 +158,14 @@ jobs:
       - name: Check webhook signature verification
         run: |
           echo "Checking webhook security implementation..."
-          
+
           # Check for webhook signature verification
           if grep -r "verifyWebhookSignature\|x-hub-signature" src/; then
             echo "✅ Webhook signature verification implemented"
           else
             echo "⚠️ Webhook signature verification not found"
           fi
-          
+
           # Check for GITHUB_WEBHOOK_SECRET usage
           if grep -r "GITHUB_WEBHOOK_SECRET" src/; then
             echo "✅ Webhook secret configuration found"
@@ -183,7 +183,7 @@ jobs:
       - name: Check repository access controls
         run: |
           echo "Checking repository access control implementation..."
-          
+
           # Check for user repository access verification
           if grep -r "verifyUserRepositoryAccess\|checkRepositoryOwnership" src/; then
             echo "✅ Repository access verification implemented"
@@ -191,7 +191,7 @@ jobs:
             echo "⚠️ Repository access verification not found"
             exit 1
           fi
-          
+
           # Check for collaborator verification
           if grep -r "verifyMainRepoCollaboratorAccess\|checkCollaborator" src/; then
             echo "✅ Collaborator verification implemented"
@@ -210,12 +210,12 @@ jobs:
       - name: Check environment variable usage
         run: |
           echo "Checking environment variable security..."
-          
+
           # Check for proper environment variable usage
           if grep -r "process\.env\." src/ | grep -v "NODE_ENV\|GITHUB_CLIENT_ID"; then
             echo "Environment variables found - ensure they are properly secured"
           fi
-          
+
           # Check for hardcoded secrets (basic check)
           if grep -ri "secret.*=.*['\"][a-z0-9]\{10,\}['\"]" src/; then
             echo "❌ Possible hardcoded secrets found"
@@ -227,26 +227,34 @@ jobs:
   summary:
     runs-on: ubuntu-latest
     name: Security Check Summary
-    needs: [dependency-scan, codeql-analysis, secret-scan, oauth-security-check, webhook-security-check, repository-security-check]
+    needs:
+      [
+        dependency-scan,
+        codeql-analysis,
+        secret-scan,
+        oauth-security-check,
+        webhook-security-check,
+        repository-security-check,
+      ]
     if: always()
     steps:
       - name: Security Summary
         run: |
-          echo "## 🔒 GitSocial Security Check Summary"
+            echo "## GitSocial Security Check Summary"
           echo ""
           echo "### Completed Checks:"
-          echo "- ✅ Dependency vulnerability scanning"
-          echo "- ✅ CodeQL security analysis"  
-          echo "- ✅ Secret scanning"
-          echo "- ✅ OAuth configuration validation"
-          echo "- ✅ Webhook security verification"
-          echo "- ✅ Repository access control validation"
+            echo "- Dependency vulnerability scanning"
+            echo "- CodeQL security analysis"  
+            echo "- Secret scanning"
+            echo "- OAuth configuration validation"
+            echo "- Webhook security verification"
+            echo "- Repository access control validation"
           echo ""
           echo "### Security Features Verified:"
-          echo "- 🔐 Minimal OAuth scopes (read:user, user:email, public_repo)"
-          echo "- 🛡️ Webhook signature verification"
-          echo "- 🏰 Repository access controls"
-          echo "- 👥 Collaborator permission verification"
-          echo "- 🔍 Dependency vulnerability monitoring"
+            echo "- Minimal OAuth scopes (read:user, user:email, public_repo)"
+            echo "- Webhook signature verification"
+            echo "- Repository access controls"
+            echo "- Collaborator permission verification"
+            echo "- Dependency vulnerability monitoring"
           echo ""
-          echo "GitSocial security checks completed successfully! 🎉"
+            echo "GitSocial security checks completed successfully!"

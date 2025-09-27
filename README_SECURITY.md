@@ -1,20 +1,20 @@
-# 🔒 GitSocial Security Setup Guide
+#  GitSocial Security Setup Guide
 
-## 🚨 **Security Requirements Fulfilled**
+##  **Security Requirements Fulfilled**
 
 Your security concerns have been completely addressed! GitSocial now has enterprise-grade security:
 
-### ✅ **User Repository Security**
+###  **User Repository Security**
 - **Minimal OAuth Scopes**: Only necessary permissions requested
 - **Repository Protection**: Branch protection and access controls
 - **Owner Control**: Users maintain full ownership of their data
 
-### ✅ **Application Security**  
+###  **Application Security**  
 - **Collaborator-Only Access**: Only authorized maintainers can modify GitSocial
 - **Admin API Protection**: Secure endpoints with permission verification
 - **Webhook Security**: Cryptographic signature verification
 
-## 🔧 **Security Setup Instructions**
+##  **Security Setup Instructions**
 
 ### **1. GitHub OAuth Application**
 
@@ -67,7 +67,7 @@ The application will automatically:
 - Configure minimal access permissions
 - Verify collaborator access for admin functions
 
-## 🛡️ **Security Features**
+##  **Security Features**
 
 ### **OAuth Scopes** (Minimal Required)
 ```typescript
@@ -96,13 +96,13 @@ scope: [
 - **Event Filtering**: Only authorized events processed
 - **Replay Protection**: Prevents duplicate processing
 
-## 🔍 **Security Verification**
+##  **Security Verification**
 
 ### **Test User Repository Security**
 ```bash
 # Check your repository protection:
 curl -H "Authorization: token YOUR_TOKEN" \
-  "https://api.github.com/repos/YOUR_USERNAME/social-data/branches/main/protection"
+  "https://api.github.com/repos/YOUR_USERNAME/open-social-data/branches/main/protection"
 ```
 
 ### **Test Admin Access**
@@ -121,33 +121,33 @@ curl -X POST http://localhost:3000/api/webhook/github \
   -d '{"test": "payload"}'
 ```
 
-## 🚨 **Security Guarantees**
+##  **Security Guarantees**
 
-### **✅ What Users CAN Do:**
-- Full control over their `social-data` repository
+### ** What Users CAN Do:**
+- Full control over their `open-social-data` repository
 - Authorize GitSocial via OAuth with minimal permissions
 - Revoke access at any time through GitHub settings
 - Export/backup all their social data
 
-### **❌ What Random People CANNOT Do:**
+### ** What Random People CANNOT Do:**
 - Modify user repositories without permission
 - Access GitSocial admin functions
 - Create unauthorized webhooks or API calls
 - Bypass OAuth permission requirements
 
-### **✅ What GitSocial App CAN Do:**
+### ** What GitSocial App CAN Do:**
 - Create user repositories (with OAuth consent)
 - Read/write social data (with user permission)
 - Update user registry with authorized data
 - Process webhooks from authorized repositories
 
-### **❌ What GitSocial App CANNOT Do:**
+### ** What GitSocial App CANNOT Do:**
 - Access private repositories
 - Perform actions without user OAuth consent
 - Modify repositories without proper permissions
 - Store user credentials or tokens permanently
 
-## 📋 **Security Monitoring**
+##  **Security Monitoring**
 
 ### **Automated Checks**
 - **CodeQL Analysis**: Static security analysis
@@ -160,7 +160,7 @@ curl -X POST http://localhost:3000/api/webhook/github \
 - **Repository Security**: User data protection verification
 - **Admin Actions**: All administrative operations logged
 
-## 🎯 **Production Security**
+##  **Production Security**
 
 ### **Required for Production:**
 1. **HTTPS Only**: Force secure connections
@@ -189,14 +189,14 @@ const securityHeaders = [
 
 ---
 
-## 🎉 **Security Implementation Complete!**
+##  **Security Implementation Complete!**
 
 **Your GitSocial platform now provides:**
-- ✅ **User Data Ownership** with secure repository control
-- ✅ **Application Security** with collaborator-only access
-- ✅ **OAuth Protection** with minimal required permissions  
-- ✅ **Webhook Security** with cryptographic verification
-- ✅ **Access Control** with comprehensive permission checking
-- ✅ **Security Monitoring** with automated vulnerability scanning
+-  **User Data Ownership** with secure repository control
+-  **Application Security** with collaborator-only access
+-  **OAuth Protection** with minimal required permissions  
+-  **Webhook Security** with cryptographic verification
+-  **Access Control** with comprehensive permission checking
+-  **Security Monitoring** with automated vulnerability scanning
 
-**GitSocial is now secure and ready for production use! 🔒**
+**GitSocial is now secure and ready for production use! **

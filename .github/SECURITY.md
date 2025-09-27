@@ -1,6 +1,6 @@
 # Security Policy
 
-## 🔒 Security Overview
+##  Security Overview
 
 GitSocial implements comprehensive security measures to protect both the application and user data:
 
@@ -11,19 +11,19 @@ GitSocial implements comprehensive security measures to protect both the applica
 - **Webhook Verification**: All webhooks verified with cryptographic signatures
 
 ### **User Data Protection**
-- **Repository Ownership**: Users maintain full ownership of their social-data repositories
+- **Repository Ownership**: Users maintain full ownership of their open-social-data repositories
 - **Access Control**: Only the user and GitSocial app can write to user repositories
 - **Encrypted Communication**: All API communications use HTTPS
 - **Token Security**: Access tokens handled securely with proper scoping
 
-## 🚨 Supported Versions
+##  Supported Versions
 
 | Version | Supported          |
 | ------- | ------------------ |
 | 1.0.x   | :white_check_mark: |
 | < 1.0   | :x:                |
 
-## 🛡️ Security Features
+##  Security Features
 
 ### **OAuth Security**
 - **Minimal Scopes**: Only requests necessary permissions
@@ -44,7 +44,7 @@ GitSocial implements comprehensive security measures to protect both the applica
 - **Event Filtering**: Only processes authorized webhook events
 - **Secure Endpoints**: Webhook endpoints protected against replay attacks
 
-## 🔐 Access Control
+##  Access Control
 
 ### **Main Repository (`open-social`)**
 **Who can modify:**
@@ -57,7 +57,7 @@ GitSocial implements comprehensive security measures to protect both the applica
 - Admin enforcement disabled for emergency access
 - All changes logged and monitored
 
-### **User Repositories (`username/social-data`)**
+### **User Repositories (`username/open-social-data`)**
 **Who can modify:**
 - Repository owner (the user)
 - GitSocial application (with user's explicit OAuth consent)
@@ -67,7 +67,7 @@ GitSocial implements comprehensive security measures to protect both the applica
 - Repository settings configured for security
 - All modifications logged via webhooks
 
-## 🚨 Reporting a Vulnerability
+##  Reporting a Vulnerability
 
 ### **Reporting Process**
 
@@ -106,11 +106,11 @@ GitSocial implements comprehensive security measures to protect both the applica
 - Minor configuration issues
 - Non-security bugs with security implications
 
-## 🛠️ Security Best Practices
+##  Security Best Practices
 
 ### **For Users**
 - **Review Permissions**: Understand what access GitSocial requests
-- **Monitor Repositories**: Check your social-data repository for unexpected changes
+- **Monitor Repositories**: Check your open-social-data repository for unexpected changes
 - **Secure Authentication**: Use strong passwords and 2FA on GitHub
 - **Regular Backups**: Keep backups of your social data
 
@@ -126,7 +126,7 @@ GitSocial implements comprehensive security measures to protect both the applica
 - **Token Rotation**: Regular rotation of GitHub OAuth application credentials
 - **Audit Logs**: Monitor all administrative actions
 
-## 📋 Security Checklist
+##  Security Checklist
 
 ### **OAuth Application**
 - [x] Minimal required scopes configured
@@ -152,7 +152,7 @@ GitSocial implements comprehensive security measures to protect both the applica
 - [x] Dependency vulnerability scanning
 - [x] Regular security updates
 
-## 🔍 Security Monitoring
+##  Security Monitoring
 
 **Automated Monitoring:**
 - GitHub Security Advisories

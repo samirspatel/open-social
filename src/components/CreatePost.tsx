@@ -90,7 +90,7 @@ export default function CreatePost({ onPost }: CreatePostProps) {
               {session?.user?.name || 'User'}
             </h3>
             <p className="text-xs text-instagram-text-light">
-              Publishing to: {session?.user?.name}/social-data
+              Publishing to: {session?.user?.name}/open-social-data
             </p>
           </div>
         </div>

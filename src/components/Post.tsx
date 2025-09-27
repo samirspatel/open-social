@@ -58,7 +58,7 @@ export default function Post({ post, onLike }: PostProps) {
             </div>
             <div className="flex items-center space-x-2 text-instagram-text-light text-xs">
               <span>{post.author.handle}</span>
-              <span>•</span>
+              <span>�</span>
               <span>{formatDistanceToNow(post.timestamp, { addSuffix: true })}</span>
             </div>
           </div>
@@ -157,7 +157,7 @@ export default function Post({ post, onLike }: PostProps) {
                 <div className="flex-1">
                   <div className="text-sm">
                     <span className="font-semibold mr-2">johndoe</span>
-                    <span>This is amazing! 🔥</span>
+                    <span>This is amazing! </span>
                   </div>
                   <div className="text-xs text-instagram-text-light mt-1">
                     2h

@@ -46,16 +46,16 @@ export const authOptions: NextAuthOptions = {
             return false
           }
           
-          // Check if user already has a social-data repository
-          const socialRepo = await githubService.getRepository(user.name!, 'social-data')
+          // Check if user already has a open-social-data repository
+          const socialRepo = await githubService.getRepository(user.name!, 'open-social-data')
           
           if (!socialRepo.success) {
-            // First-time user - create their social-data repository
-            console.log('Creating social-data repository for new user:', user.name)
+            // First-time user - create their open-social-data repository
+            console.log('Creating open-social-data repository for new user:', user.name)
             
             const createResult = await githubService.createSocialDataRepository(user.name!)
             if (!createResult.success) {
-              console.error('Failed to create social-data repository:', createResult.error)
+              console.error('Failed to create open-social-data repository:', createResult.error)
               return false
             }
             
@@ -69,7 +69,7 @@ export const authOptions: NextAuthOptions = {
             })
             
             // Secure the user's repository with proper permissions
-            await githubSecurity.secureUserRepository(user.name!, 'social-data')
+            await githubSecurity.secureUserRepository(user.name!, 'open-social-data')
           }
           
           // Register or update user in the main repository
@@ -80,7 +80,7 @@ export const authOptions: NextAuthOptions = {
             email: user.email || '',
             avatar: user.image || '',
             handle: `@${user.name}.github.io`,
-            repository: `${user.name}/social-data`,
+            repository: `${user.name}/open-social-data`,
             joinedAt: new Date().toISOString()
           })
           

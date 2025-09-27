@@ -56,29 +56,29 @@ Visit `http://localhost:3000` and sign in with GitHub!
 
 ## What Happens When You Sign In
 
-1. **Repository Creation**: GitSocial automatically creates a `social-data` repository in your GitHub account
+1. **Repository Creation**: GitSocial automatically creates a `open-social-data` repository in your GitHub account
 2. **Data Structure**: Your posts, followers, and social connections are stored as JSON files
 3. **User Registry**: You're added to the global user registry for discoverability
 4. **Real-time Updates**: Your activity is tracked with full Git history
 
 ## Repository Structure
 
-After signing in, you'll have a new repository: `your-username/social-data`
+After signing in, you'll have a new repository: `your-username/open-social-data`
 
 ```
-your-username/social-data/
-├── .gitsocial/
-│   ├── config.json          # App configuration
-│   └── schema-version.json  # Data schema version
-├── profile.json             # Your profile information
-├── posts/                   # All your posts as JSON files
-│   ├── 2024-01-15-1234567890.json
-│   └── 2024-01-16-0987654321.json
-├── social/
-│   ├── following.json       # People you follow
-│   ├── followers.json       # Your followers
-│   └── likes.json          # Posts you've liked
-└── media/                   # Uploaded images and files
+your-username/open-social-data/
+ .gitsocial/
+�    config.json          # App configuration
+�    schema-version.json  # Data schema version
+ profile.json             # Your profile information
+ posts/                   # All your posts as JSON files
+�    2024-01-15-1234567890.json
+�    2024-01-16-0987654321.json
+ social/
+�    following.json       # People you follow
+�    followers.json       # Your followers
+�    likes.json          # Posts you've liked
+ media/                   # Uploaded images and files
 ```
 
 ## Features
@@ -130,7 +130,7 @@ Use the included development script for all common tasks:
 
 ### "Failed to create repository"
 - Check that your GitHub token has `repo` scope permissions
-- Ensure the repository name `social-data` is available in your account
+- Ensure the repository name `open-social-data` is available in your account
 - Verify your GitHub OAuth app has the correct callback URL
 
 ### "Authentication failed"
@@ -139,7 +139,7 @@ Use the included development script for all common tasks:
 - Clear your browser cookies and try signing in again
 
 ### "Cannot read posts"
-- The app expects a `social-data` repository to exist in your GitHub account
+- The app expects a `open-social-data` repository to exist in your GitHub account
 - If you deleted the repository, sign out and sign back in to recreate it
 - Check that the repository is public (required for the current implementation)
 
@@ -161,6 +161,6 @@ Once you're up and running:
 1. **Create Your First Post**: Use the post composer to create content
 2. **Find Other Users**: Check out the user discovery features
 3. **Follow People**: Build your social network
-4. **Explore Your Data**: Browse your `social-data` repository to see how your data is stored
+4. **Explore Your Data**: Browse your `open-social-data` repository to see how your data is stored
 
-Welcome to the future of user-owned social media! 🎉
+Welcome to the future of user-owned social media! 

@@ -90,10 +90,10 @@ export default function AuthModal({ isOpen }: AuthModalProps) {
           <div className="mt-6 p-4 bg-blue-50 rounded-lg text-left">
             <h3 className="font-semibold text-blue-900 mb-2 text-xs">What happens when you sign in:</h3>
             <ul className="text-xs text-blue-800 space-y-1">
-              <li>â€¢ We&apos;ll create a &apos;social-data&apos; repository in your account</li>
-              <li>â€¢ Your posts will be stored as JSON files with full history</li>
-              <li>â€¢ You maintain complete ownership of your social data</li>
-              <li>â€¢ Export or migrate your data anytime - no lock-in</li>
+              <li>¢ We&apos;ll create a &apos;open-social-data&apos; repository in your account</li>
+              <li>¢ Your posts will be stored as JSON files with full history</li>
+              <li>¢ You maintain complete ownership of your social data</li>
+              <li>¢ Export or migrate your data anytime - no lock-in</li>
             </ul>
           </div>
 

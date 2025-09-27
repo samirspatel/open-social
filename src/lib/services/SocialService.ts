@@ -88,7 +88,7 @@ export class SocialService {
 
   private async removeFromFollowingList(username: string, targetHandle: string) {
     try {
-      const followingResult = await this.githubService.getFileContent(username, 'social-data', 'social/following.json')
+      const followingResult = await this.githubService.getFileContent(username, 'open-social-data', 'social/following.json')
       
       if (!followingResult.success) {
         throw new Error('Failed to get following list')
@@ -104,7 +104,7 @@ export class SocialService {
       )
 
       // Update the file
-      await this.githubService.getFileContent(username, 'social-data', 'social/following.json')
+      await this.githubService.getFileContent(username, 'open-social-data', 'social/following.json')
       // Implementation would continue here...
     } catch (error) {
       console.error('Error removing from following list:', error)
@@ -114,7 +114,7 @@ export class SocialService {
 
   private async removeFromFollowersList(username: string, followerHandle: string) {
     try {
-      const followersResult = await this.githubService.getFileContent(username, 'social-data', 'social/followers.json')
+      const followersResult = await this.githubService.getFileContent(username, 'open-social-data', 'social/followers.json')
       
       if (!followersResult.success) {
         throw new Error('Failed to get followers list')
@@ -140,7 +140,7 @@ export class SocialService {
   async getFeedData(username: string) {
     try {
       // Get user's following list
-      const followingResult = await this.githubService.getFileContent(username, 'social-data', 'social/following.json')
+      const followingResult = await this.githubService.getFileContent(username, 'open-social-data', 'social/following.json')
       
       if (!followingResult.success) {
         return { success: false, error: 'Failed to get following list' }

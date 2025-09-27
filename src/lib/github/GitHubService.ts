@@ -49,7 +49,7 @@ export class GitHubService {
   async createSocialDataRepository(username: string) {
     try {
       const { data } = await this.octokit.rest.repos.createForAuthenticatedUser({
-        name: 'social-data',
+        name: 'open-social-data',
         description: `${username}'s distributed social media data repository`,
         private: false,
         has_issues: false,
@@ -131,7 +131,7 @@ export class GitHubService {
       for (const file of files) {
         await this.octokit.rest.repos.createOrUpdateFileContents({
           owner: username,
-          repo: 'social-data',
+          repo: 'open-social-data',
           path: file.path,
           message: `Initialize ${file.path}`,
           content: Buffer.from(file.content).toString('base64')
@@ -169,7 +169,7 @@ export class GitHubService {
 
       await this.octokit.rest.repos.createOrUpdateFileContents({
         owner: username,
-        repo: 'social-data',
+        repo: 'open-social-data',
         path: filename,
         message: `Add new post: ${postData.id}`,
         content: Buffer.from(JSON.stringify(postContent, null, 2)).toString('base64')
@@ -192,7 +192,7 @@ export class GitHubService {
   async followUser(username: string, targetUser: string, targetHandle: string) {
     try {
       // Get current following list
-      const followingResult = await this.getFileContent(username, 'social-data', 'social/following.json')
+      const followingResult = await this.getFileContent(username, 'open-social-data', 'social/following.json')
       
       if (!followingResult.success) {
         throw new Error('Failed to get following list')
@@ -210,14 +210,14 @@ export class GitHubService {
       if (!alreadyFollowing) {
         followingData.following.push({
           handle: targetHandle,
-          repository: `${targetUser}/social-data`,
+          repository: `${targetUser}/open-social-data`,
           followedAt: new Date().toISOString()
         })
 
         // Update following.json
         await this.octokit.rest.repos.createOrUpdateFileContents({
           owner: username,
-          repo: 'social-data',
+          repo: 'open-social-data',
           path: 'social/following.json',
           message: `Follow ${targetHandle}`,
           content: Buffer.from(JSON.stringify(followingData, null, 2)).toString('base64'),
@@ -238,7 +238,7 @@ export class GitHubService {
   async addFollower(username: string, followerUser: string, followerHandle: string) {
     try {
       // Get current followers list
-      const followersResult = await this.getFileContent(username, 'social-data', 'social/followers.json')
+      const followersResult = await this.getFileContent(username, 'open-social-data', 'social/followers.json')
       
       if (!followersResult.success) {
         throw new Error('Failed to get followers list')
@@ -256,14 +256,14 @@ export class GitHubService {
       if (!alreadyFollower) {
         followersData.followers.push({
           handle: followerHandle,
-          repository: `${followerUser}/social-data`,
+          repository: `${followerUser}/open-social-data`,
           followedAt: new Date().toISOString()
         })
 
         // Update followers.json
         await this.octokit.rest.repos.createOrUpdateFileContents({
           owner: username,
-          repo: 'social-data',
+          repo: 'open-social-data',
           path: 'social/followers.json',
           message: `Add follower ${followerHandle}`,
           content: Buffer.from(JSON.stringify(followersData, null, 2)).toString('base64'),
@@ -319,7 +319,7 @@ export class GitHubService {
     try {
       const postsResult = await this.octokit.rest.repos.getContent({
         owner: username,
-        repo: 'social-data',
+        repo: 'open-social-data',
         path: 'posts'
       })
 
@@ -362,7 +362,7 @@ export class GitHubService {
 
   async getUserProfile(username: string) {
     try {
-      const profileResult = await this.getFileContent(username, 'social-data', 'profile.json')
+      const profileResult = await this.getFileContent(username, 'open-social-data', 'profile.json')
       
       if (!profileResult.success) {
         return profileResult
