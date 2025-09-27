@@ -99,7 +99,7 @@ export default function AuthModal({ isOpen }: AuthModalProps) {
               What happens when you sign in:
             </h3>
             <ul className="text-xs text-blue-800 space-y-1">
-              <li>• We'll create an 'open-social-data' repository in your account</li>
+              <li>• We&apos;ll create an &apos;open-social-data&apos; repository in your account</li>
               <li>• Your posts will be stored as JSON files with full history</li>
               <li>• You maintain complete ownership of your social data</li>
               <li>• Export or migrate your data anytime - no lock-in</li>
