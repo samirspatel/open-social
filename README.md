@@ -15,6 +15,8 @@ GitSocial is a distributed social media application where users' data lives in t
 - [Live Demo](#live-demo)
 - [Features](#features)
 - [Architecture](#architecture)
+- [Security](#security)
+- [Security Setup](#security-setup)
 - [Development](#development)
 - [Deployment](#deployment)
 - [Technical Stack](#technical-stack)
