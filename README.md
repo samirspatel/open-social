@@ -348,6 +348,129 @@ cd open-social
 ./dev.sh install && ./dev.sh dev
 ```
 
+## Security
+
+GitSocial implements comprehensive security measures to protect both the application and user data.
+
+### Security Requirements Fulfilled
+
+GitSocial has enterprise-grade security with all concerns addressed:
+
+#### User Repository Security
+- **Minimal OAuth Scopes**: Only necessary permissions requested
+- **Repository Protection**: Branch protection and access controls
+- **Owner Control**: Users maintain full ownership of their data
+
+#### Application Security  
+- **Collaborator-Only Access**: Only authorized maintainers can modify GitSocial
+- **Admin API Protection**: Secure endpoints with permission verification
+- **Webhook Security**: Cryptographic signature verification
+
+### OAuth Scopes (Minimal Required)
+```typescript
+scope: [
+  'read:user',      // Read user profile
+  'user:email',     // Read user email  
+  'public_repo',    // Manage public repositories
+  'repo:status',    // Read repository status
+  'read:org'        // Verify organization membership
+]
+```
+
+### Access Control Matrix
+
+| Resource | User | GitSocial App | Random People | Collaborators |
+|----------|------|---------------|---------------|---------------|
+| **User's open-social-data repo** | Full Control | OAuth-authorized | No Access | No Access |
+| **GitSocial main repo** | Read-only | No direct access | Read-only | Full Access |
+| **User registry (user-data branch)** | No direct access | Automated updates | No Access | Full Access |
+| **Admin API endpoints** | No Access | No Access | No Access | Full Access |
+
+### Security Guarantees
+
+#### What Users CAN Do:
+- Full control over their `open-social-data` repository
+- Authorize GitSocial via OAuth with minimal permissions
+- Revoke access at any time through GitHub settings
+- Export/backup all their social data
+
+#### What Random People CANNOT Do:
+- Modify user repositories without permission
+- Access GitSocial admin functions
+- Create unauthorized webhooks or API calls
+- Bypass OAuth permission requirements
+
+## Security Setup
+
+### GitHub OAuth Application
+
+Create a secure GitHub OAuth app:
+
+1. **Go to**: https://github.com/settings/applications/new
+2. **Application name**: `GitSocial - Your Instance` 
+3. **Homepage URL**: `https://your-domain.com` (or `http://localhost:3000` for development)
+4. **Authorization callback URL**: `https://your-domain.com/api/auth/callback/github`
+5. **Save** and copy the Client ID and Client Secret
+
+### Environment Variables
+
+Copy `env.example` to `.env.local`:
+```bash
+cp env.example .env.local
+```
+
+Configure your environment:
+```env
+# GitHub OAuth (Required)
+GITHUB_CLIENT_ID=your_client_id_here
+GITHUB_CLIENT_SECRET=your_client_secret_here
+
+# NextAuth (Required)
+NEXTAUTH_SECRET=your_32_character_secret_key_here
+NEXTAUTH_URL=http://localhost:3000
+
+# Webhook Security (Optional)
+GITHUB_WEBHOOK_SECRET=your_webhook_secret_here
+
+# Security (Optional)
+ALLOWED_COLLABORATORS=your_github_username,other_maintainer
+```
+
+### Generate Secure Secrets
+
+```bash
+# Generate NextAuth secret
+openssl rand -base64 32
+
+# Generate webhook secret  
+openssl rand -hex 32
+```
+
+### Security Verification
+
+#### Test User Repository Security
+```bash
+# Check your repository protection:
+curl -H "Authorization: token YOUR_TOKEN" \
+  "https://api.github.com/repos/YOUR_USERNAME/open-social-data/branches/main/protection"
+```
+
+#### Test Admin Access
+```bash
+# Verify admin permissions:
+curl -H "Authorization: Bearer YOUR_SESSION_TOKEN" \
+  "http://localhost:3000/api/admin?action=stats"
+```
+
+### Production Security
+
+#### Required for Production:
+1. **HTTPS Only**: Force secure connections
+2. **Webhook Secrets**: Configure GitHub webhook signatures
+3. **Environment Security**: Secure secret storage
+4. **Access Monitoring**: Log and monitor all access
+5. **Regular Updates**: Keep dependencies current
+
 ## License
 
 MIT License - see [LICENSE](LICENSE) file for details.
