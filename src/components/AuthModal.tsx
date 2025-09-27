@@ -16,42 +16,34 @@ export default function AuthModal({ isOpen, onLogin }: AuthModalProps) {
 
   const handleGitHubLogin = async () => {
     setIsLoading(true)
-    setStep('setup')
     
     try {
       const githubAuth = new GitHubAuth()
       await githubAuth.login()
-    } catch (error) {
-      console.error('Sign in error:', error)
-      setIsLoading(false)
-      setStep('login')
-    }
-  }
-
-  const handleTokenSetup = async () => {
-    setIsLoading(true)
-    
-    try {
-      const githubAuth = new GitHubAuth()
-      const user = await githubAuth.getCurrentUser()
       
-      // Initialize user's social data repository
+      // After successful token validation, get user and set up their account
+      const user = await githubAuth.getCurrentUser()
       const githubAPI = new GitHubAPI(user.token)
       
       // Check if repository already exists
       const repoExists = await githubAPI.repositoryExists(user.login, 'open-social-data')
       
       if (!repoExists) {
+        setStep('setup')
         await githubAPI.initializeSocialDataRepo(user.login, user)
       }
       
       onLogin(user)
     } catch (error) {
-      console.error('Setup error:', error)
-      alert('Setup failed. Please try again.')
-    } finally {
+      console.error('Sign in error:', error)
+      alert('Authentication failed. Please check your token and try again.')
       setIsLoading(false)
     }
+  }
+
+  const handleTokenSetup = async () => {
+    // This function is no longer needed as setup is handled in handleGitHubLogin
+    setStep('login')
   }
 
   if (!isOpen) return null
@@ -190,12 +182,12 @@ export default function AuthModal({ isOpen, onLogin }: AuthModalProps) {
             {isLoading ? (
               <>
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                <span>Connecting to GitHub...</span>
+                <span>{step === 'setup' ? 'Setting up your account...' : 'Connecting to GitHub...'}</span>
               </>
             ) : (
               <>
                 <Github className="w-5 h-5" />
-                <span>Continue with GitHub</span>
+                <span>Continue with GitHub Token</span>
               </>
             )}
           </button>

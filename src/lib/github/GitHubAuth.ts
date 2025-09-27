@@ -1,71 +1,36 @@
 export class GitHubAuth {
-  private readonly CLIENT_ID = '4d7c4f6e8a1b2c3d4e5f' // Replace with your GitHub OAuth App client ID
-  private readonly REDIRECT_URI = window.location.origin + '/auth/callback'
-  private readonly SCOPES = ['read:user', 'user:email', 'public_repo', 'repo']
-
   // Store auth data in localStorage
   private readonly AUTH_KEY = 'gitsocial_auth'
 
   constructor() {
-    // Handle OAuth callback if we're on the callback page
-    this.handleCallback()
+    // No OAuth callback handling needed for token-based auth
   }
 
   async login(): Promise<void> {
-    // Generate state for security
-    const state = this.generateState()
-    localStorage.setItem('oauth_state', state)
+    // Direct token input approach for GitHub Pages
+    const instructions = `
+To use GitSocial, you need a GitHub Personal Access Token:
 
-    // Redirect to GitHub OAuth
-    const params = new URLSearchParams({
-      client_id: this.CLIENT_ID,
-      redirect_uri: this.REDIRECT_URI,
-      scope: this.SCOPES.join(' '),
-      state,
-      allow_signup: 'true'
-    })
+1. Go to: https://github.com/settings/tokens/new
+2. Set description: "GitSocial Access" 
+3. Set expiration: "No expiration" (or your preferred duration)
+4. Select these scopes:
+   ✓ repo (Full control of private repositories)
+   ✓ read:user (Read user profile data)
+   ✓ user:email (Access user email addresses)
 
-    window.location.href = `https://github.com/login/oauth/authorize?${params}`
-  }
+5. Click "Generate token"
+6. Copy the token and paste it below
 
-  private handleCallback(): void {
-    const url = new URL(window.location.href)
-    const code = url.searchParams.get('code')
-    const state = url.searchParams.get('state')
-    const storedState = localStorage.getItem('oauth_state')
+Your token is stored locally and never sent to any server.
+GitSocial communicates directly with GitHub's API.`
 
-    if (code && state === storedState) {
-      // Clear the URL parameters
-      window.history.replaceState({}, document.title, window.location.pathname)
-      
-      // Exchange code for token using GitHub's device flow approach
-      this.exchangeCodeForToken(code)
-    }
-  }
+    const token = prompt(instructions)
 
-  private async exchangeCodeForToken(code: string): Promise<void> {
-    try {
-      // For GitHub Pages, we'll use a CORS proxy or GitHub's client-side flow
-      // This is a simplified version - in production, you might use GitHub's device flow
-      // or a serverless function for the token exchange
-      
-      // For now, we'll prompt the user to create a personal access token
-      // as GitHub's OAuth requires a server-side exchange normally
-      
-      const token = prompt(`
-        For GitSocial to work, please create a GitHub Personal Access Token:
-        
-        1. Go to: https://github.com/settings/tokens/new
-        2. Set description: "GitSocial Access"
-        3. Select scopes: repo, read:user, user:email
-        4. Generate token and paste it here:
-      `)
-
-      if (token) {
-        await this.validateAndStoreToken(token)
-      }
-    } catch (error) {
-      console.error('Token exchange failed:', error)
+    if (token) {
+      await this.validateAndStoreToken(token.trim())
+    } else {
+      throw new Error('Token required for authentication')
     }
   }
 
