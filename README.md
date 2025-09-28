@@ -1,10 +1,10 @@
-# GitSocial - Distributed Social Media Platform
+# GitSocial - Secure Distributed Social Media Platform
 
 **[Live Demo: https://samirpatel.github.io/open-social/](https://samirpatel.github.io/open-social/)** *(Note: May take 5-10 minutes to go live after deployment)*
 
 > What open source did for code, open social does for data.
 
-GitSocial is a distributed social media application where users' data lives in their own GitHub repositories, implementing true data ownership and portability.
+GitSocial is a distributed social media application where users' data lives in their own GitHub repositories, implementing true data ownership and portability. Features ultra-secure authentication that CANNOT access private repositories - only public ones.
 
 **Status: PRODUCTION READY** - Full Instagram-like social media experience built with Next.js 14, TypeScript, and modern web technologies.
 

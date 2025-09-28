@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Github, Lock, Users } from 'lucide-react'
-import { GitHubAuth } from '@/lib/github/GitHubAuth'
+import { PublicRepoAuth } from '@/lib/auth/PublicRepoAuth'
 import { GitHubAPI } from '@/lib/github/GitHubAPI'
 
 interface AuthModalProps {
@@ -18,7 +18,7 @@ export default function AuthModal({ isOpen, onLogin }: AuthModalProps) {
     setIsLoading(true)
     
     try {
-      const githubAuth = new GitHubAuth()
+      const githubAuth = new PublicRepoAuth()
       await githubAuth.login()
       
       // After successful token validation, get user and set up their account
@@ -143,11 +143,11 @@ export default function AuthModal({ isOpen, onLogin }: AuthModalProps) {
           {/* Features */}
           <div className="space-y-4 mb-8">
             <div className="flex items-start space-x-3">
-              <Lock className="w-5 h-5 text-instagram-primary mt-0.5" />
+              <Lock className="w-5 h-5 text-green-600 mt-0.5" />
               <div>
-                <h3 className="font-semibold text-sm">Own Your Data</h3>
+                <h3 className="font-semibold text-sm">Ultra-Secure Authentication</h3>
                 <p className="text-instagram-text-light text-xs">
-                  Your posts, likes, and follows live in your GitHub repository
+                  Token can ONLY access public repositories - zero security risks
                 </p>
               </div>
             </div>
@@ -155,9 +155,9 @@ export default function AuthModal({ isOpen, onLogin }: AuthModalProps) {
             <div className="flex items-start space-x-3">
               <Users className="w-5 h-5 text-instagram-secondary mt-0.5" />
               <div>
-                <h3 className="font-semibold text-sm">Full Portability</h3>
+                <h3 className="font-semibold text-sm">Public & Transparent</h3>
                 <p className="text-instagram-text-light text-xs">
-                  Switch apps anytime without losing your connections
+                  Social media data in public repos - full transparency & portability
                 </p>
               </div>
             </div>
@@ -165,9 +165,9 @@ export default function AuthModal({ isOpen, onLogin }: AuthModalProps) {
             <div className="flex items-start space-x-3">
               <Github className="w-5 h-5 text-instagram-tertiary mt-0.5" />
               <div>
-                <h3 className="font-semibold text-sm">GitHub Integration</h3>
+                <h3 className="font-semibold text-sm">Zero Server Dependency</h3>
                 <p className="text-instagram-text-light text-xs">
-                  Runs entirely on GitHub Pages - no servers needed
+                  Pure GitHub Pages deployment - no servers, no vendor lock-in
                 </p>
               </div>
             </div>
@@ -187,29 +187,31 @@ export default function AuthModal({ isOpen, onLogin }: AuthModalProps) {
             ) : (
               <>
                 <Github className="w-5 h-5" />
-                <span>Continue with GitHub Token</span>
+                <span>Secure GitHub Authentication</span>
               </>
             )}
           </button>
 
-          {/* Info */}
+          {/* Security Info */}
           <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg text-left">
             <h3 className="font-semibold text-green-900 mb-2 text-xs">
-              What happens when you sign in:
+              🔒 Ultra-Secure Authentication:
             </h3>
             <ul className="text-xs text-green-800 space-y-1">
-              <li>• Creates an &apos;open-social-data&apos; repository in your account</li>
-              <li>• Posts stored as JSON files with full Git history</li>
-              <li>• Complete data ownership - it&apos;s YOUR repository</li>
-              <li>• Export or migrate data anytime - no vendor lock-in</li>
-              <li>• Zero hosting costs - runs on GitHub Pages</li>
+              <li>• Token scopes: <code>public_repo</code>, <code>read:user</code>, <code>user:email</code></li>
+              <li>• CANNOT access your private repositories</li>
+              <li>• Creates public &apos;open-social-data&apos; repository</li>
+              <li>• Social media data is public anyway - full transparency</li>
+              <li>• Complete data portability - your repository, your control</li>
             </ul>
           </div>
 
-          {/* Terms */}
-          <p className="text-center text-instagram-text-light text-xs mt-4">
-            Production social media platform - your data, your control
-          </p>
+          {/* Security Notice */}
+          <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <p className="text-center text-blue-800 text-xs">
+              <strong>Security First:</strong> Your authentication token cannot access private repositories - only public ones. Social media data lives transparently in your public GitHub repository.
+            </p>
+          </div>
         </div>
       </div>
     </div>

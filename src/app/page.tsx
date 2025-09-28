@@ -5,7 +5,7 @@ import Header from '@/components/Header'
 import Sidebar from '@/components/Sidebar'
 import Feed from '@/components/Feed'
 import AuthModal from '@/components/AuthModal'
-import { GitHubAuth } from '@/lib/github/GitHubAuth'
+import { PublicRepoAuth } from '@/lib/auth/PublicRepoAuth'
 
 export default function Home() {
   const [user, setUser] = useState(null)
@@ -15,7 +15,7 @@ export default function Home() {
     // Check if user is already authenticated
     const checkAuth = async () => {
       try {
-        const githubAuth = new GitHubAuth()
+        const githubAuth = new PublicRepoAuth()
         const userData = await githubAuth.getCurrentUser()
         setUser(userData)
       } catch (error) {

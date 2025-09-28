@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Search, Heart, MessageCircle, PlusSquare, User, Home, Compass, LogOut } from 'lucide-react'
-import { GitHubAuth } from '@/lib/github/GitHubAuth'
+import { PublicRepoAuth } from '@/lib/auth/PublicRepoAuth'
 
 interface HeaderProps {
   user: any
@@ -14,7 +14,7 @@ export default function Header({ user, onLogout }: HeaderProps) {
 
   const handleSignOut = async () => {
     try {
-      const githubAuth = new GitHubAuth()
+      const githubAuth = new PublicRepoAuth()
       githubAuth.logout()
       onLogout()
     } catch (error) {
